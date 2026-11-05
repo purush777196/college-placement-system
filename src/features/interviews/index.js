@@ -1,0 +1,2 @@
+export const INTERVIEWS_FEATURE_NAME = 'interviews';
+export const INTERVIEW_ROUNDS = ['TECHNICAL_1', 'TECHNICAL_2', 'SYSTEM_DESIGN', 'HR_ROUND'];

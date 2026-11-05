@@ -1,0 +1,25 @@
+import React from 'react';
+import { Outlet } from 'react-router-dom';
+import Sidebar from '../components/layout/Sidebar';
+import Header from '../components/layout/Header';
+import GlobalSearchModal from '../components/common/GlobalSearchModal';
+import { ROLES } from '../constants/roles';
+
+export const StudentLayout = () => {
+  return (
+    <div className="flex min-h-screen bg-slate-50 dark:bg-slate-950">
+      <Sidebar role={ROLES.STUDENT} />
+      <div className="flex flex-1 flex-col min-w-0">
+        <Header title="Student Placement Portal" />
+        <main className="flex-1 p-4 sm:p-6 lg:p-8">
+          <div className="mx-auto max-w-7xl">
+            <Outlet />
+          </div>
+        </main>
+      </div>
+      <GlobalSearchModal />
+    </div>
+  );
+};
+
+export default StudentLayout;
