@@ -16,6 +16,9 @@ Object.defineProperty(window, 'matchMedia', {
   })),
 });
 
+// Mock window.scrollTo
+window.scrollTo = vi.fn();
+
 // Mock ResizeObserver
 global.ResizeObserver = class ResizeObserver {
   observe() {}
