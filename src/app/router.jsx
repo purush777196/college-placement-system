@@ -11,6 +11,10 @@ import HomePage from '../pages/public/HomePage';
 import AboutPage from '../pages/public/AboutPage';
 import CareersPage from '../pages/public/CareersPage';
 import ContactPage from '../pages/public/ContactPage';
+import FeaturesPage from '../pages/public/FeaturesPage';
+import FaqPage from '../pages/public/FaqPage';
+import PrivacyPage from '../pages/public/PrivacyPage';
+import TermsPage from '../pages/public/TermsPage';
 
 import LoginPage from '../pages/auth/LoginPage';
 import RegisterPage from '../pages/auth/RegisterPage';
@@ -54,8 +58,12 @@ export const router = createBrowserRouter([
     children: [
       { index: true, element: <HomePage /> },
       { path: 'about', element: <AboutPage /> },
+      { path: 'features', element: <FeaturesPage /> },
       { path: 'careers', element: <CareersPage /> },
       { path: 'contact', element: <ContactPage /> },
+      { path: 'faq', element: <FaqPage /> },
+      { path: 'privacy', element: <PrivacyPage /> },
+      { path: 'terms', element: <TermsPage /> },
     ],
   },
 
