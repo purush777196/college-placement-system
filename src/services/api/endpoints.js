@@ -42,3 +42,4 @@ export const API_ENDPOINTS = {
     DEPARTMENT_STATS: '/analytics/departments/',
   },
 };
+

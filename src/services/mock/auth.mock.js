@@ -57,3 +57,4 @@ export const authMockService = {
     return DEMO_PROFILES[role] || DEMO_PROFILES[ROLES.STUDENT];
   },
 };
+

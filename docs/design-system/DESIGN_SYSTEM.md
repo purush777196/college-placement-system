@@ -52,3 +52,4 @@ CampusConnect utilizes an enterprise SaaS palette designed for high contrast, re
 - **Focus Rings:** Accessible 2px rings with offset (`focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2`).
 - **Disabled State:** Opacity reduced to 50-60%, pointer events disabled (`disabled:pointer-events-none disabled:opacity-50`).
 - **Loading State:** Integrated Lucide `Loader2` spinner with disabled trigger state.
+

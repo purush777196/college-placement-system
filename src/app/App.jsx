@@ -24,3 +24,4 @@ if (rootEl && !rootEl.hasChildNodes()) {
 }
 
 export default App;
+

@@ -80,3 +80,4 @@ export const PackageDistributionChart = ({
 };
 
 export default PackageDistributionChart;
+

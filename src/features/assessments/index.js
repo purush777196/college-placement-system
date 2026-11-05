@@ -1,2 +1,3 @@
 export const ASSESSMENTS_FEATURE_NAME = 'assessments';
 export const ASSESSMENT_TYPES = ['CODING', 'APTITUDE', 'TECHNICAL_MCQ', 'COMMUNICATION'];
+

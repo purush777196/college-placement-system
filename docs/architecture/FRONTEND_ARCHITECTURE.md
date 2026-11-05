@@ -77,3 +77,4 @@ In Phase 2, the async mock services will be swapped for real REST calls via `src
 - If unauthorized for current role -> redirects to `/unauthorized`
 
 > **Security Disclaimer:** Client-side route protection is designed exclusively for user experience and interface flow demonstration. It does not provide cryptographic or server-level security. True role-based access control (RBAC) is enforced server-side via Django JWT claims and permissions.
+

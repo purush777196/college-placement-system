@@ -63,3 +63,4 @@ export const ROLE_NAVIGATION = {
     { label: 'Platform Settings', href: '/admin/settings', icon: Settings },
   ],
 };
+

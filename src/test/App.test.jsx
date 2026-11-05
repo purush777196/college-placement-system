@@ -9,3 +9,4 @@ describe('App Root Suite', () => {
     expect(screen.getAllByText(/CampusConnect/i).length).toBeGreaterThan(0);
   });
 });
+

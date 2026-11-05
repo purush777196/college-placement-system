@@ -50,3 +50,4 @@ HTMLCanvasElement.prototype.getContext = () => ({
   rect: () => {},
   clip: () => {},
 });
+

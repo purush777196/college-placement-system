@@ -1,2 +1,3 @@
 export const OFFERS_FEATURE_NAME = 'offers';
 export const OFFER_STATUSES = ['PENDING_ACCEPTANCE', 'ACCEPTED', 'REJECTED', 'EXPIRED'];
+

@@ -19,3 +19,4 @@ Attach screenshots or GIFs illustrating the changes if applicable.
 
 ## ⚠️ Notes / Limitations
 Document any known mock constraints or future backend endpoints to connect.
+

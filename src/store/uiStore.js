@@ -18,3 +18,4 @@ export const useUIStore = create((set) => ({
   toggleNotificationPanel: () => set((state) => ({ isNotificationPanelOpen: !state.isNotificationPanelOpen })),
   setNotificationPanelOpen: (open) => set({ isNotificationPanelOpen: open }),
 }));
+

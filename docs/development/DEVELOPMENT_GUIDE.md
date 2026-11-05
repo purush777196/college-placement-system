@@ -41,3 +41,4 @@
 3. **No Direct Hardcoded Datasets:** When creating features, create or extend service methods in `src/services/mock/` instead of hardcoding data inside pages.
 4. **Tailwind CSS v4:** Utilize `@import "tailwindcss";` conventions; avoid legacy `tailwind.config.js` requirements.
 5. **No Monolithic Components:** Break complex views into smaller presentational atoms and composable widgets.
+

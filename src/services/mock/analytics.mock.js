@@ -54,3 +54,4 @@ export const analyticsMockService = {
     return MOCK_ANALYTICS.salaryDistribution;
   },
 };
+

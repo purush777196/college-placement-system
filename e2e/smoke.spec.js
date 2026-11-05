@@ -12,3 +12,4 @@ test.describe('CampusConnect Smoke Tests', () => {
     await expect(page.locator('h1, h2')).toContainText(/Sign In|Welcome Back/i);
   });
 });
+
