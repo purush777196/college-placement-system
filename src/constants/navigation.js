@@ -19,7 +19,10 @@ import { ROLES } from './roles';
 export const PUBLIC_NAV_ITEMS = [
   { label: 'Home', href: '/' },
   { label: 'About', href: '/about' },
-  { label: 'Careers', href: '/careers' },
+  { label: 'Features', href: '/features' },
+  { label: 'For Students', href: '/#students', isAnchor: true },
+  { label: 'For Recruiters', href: '/#recruiters', isAnchor: true },
+  { label: 'FAQ', href: '/faq' },
   { label: 'Contact', href: '/contact' },
 ];
 
@@ -63,4 +66,3 @@ export const ROLE_NAVIGATION = {
     { label: 'Platform Settings', href: '/admin/settings', icon: Settings },
   ],
 };
-
