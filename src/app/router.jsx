@@ -1,5 +1,5 @@
 import React from 'react';
-import { createBrowserRouter, Navigate } from 'react-router-dom';
+import { createBrowserRouter, Navigate, useLocation } from 'react-router-dom';
 import PublicLayout from '../layouts/PublicLayout';
 import AuthLayout from '../layouts/AuthLayout';
 import StudentLayout from '../layouts/StudentLayout';
@@ -18,7 +18,11 @@ import TermsPage from '../pages/public/TermsPage';
 
 import LoginPage from '../pages/auth/LoginPage';
 import RegisterPage from '../pages/auth/RegisterPage';
+import StudentRegisterPage from '../pages/auth/StudentRegisterPage';
+import RecruiterRegisterPage from '../pages/auth/RecruiterRegisterPage';
+import TpoRegisterPage from '../pages/auth/TpoRegisterPage';
 import ForgotPasswordPage from '../pages/auth/ForgotPasswordPage';
+import ResetPasswordPage from '../pages/auth/ResetPasswordPage';
 
 import StudentDashboard from '../pages/student/StudentDashboard';
 import TpoDashboard from '../pages/tpo/TpoDashboard';
@@ -37,10 +41,12 @@ import { ROLES } from '../constants/roles';
  * JWT permissions in subsequent phases.
  */
 export const ProtectedRoute = ({ children, allowedRoles }) => {
-  const { isAuthenticated, currentRole } = useAuthStore.getState();
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+  const currentRole = useAuthStore((state) => state.currentRole);
+  const location = useLocation();
 
   if (!isAuthenticated) {
-    return <Navigate to="/auth/login" replace />;
+    return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
   if (allowedRoles && !allowedRoles.includes(currentRole)) {
@@ -67,14 +73,33 @@ export const router = createBrowserRouter([
     ],
   },
 
-  // Authentication routes
+  // Primary Authentication routes
+  {
+    path: '/',
+    element: <AuthLayout />,
+    children: [
+      { path: 'login', element: <LoginPage /> },
+      { path: 'register', element: <RegisterPage /> },
+      { path: 'register/student', element: <StudentRegisterPage /> },
+      { path: 'register/recruiter', element: <RecruiterRegisterPage /> },
+      { path: 'register/tpo', element: <TpoRegisterPage /> },
+      { path: 'forgot-password', element: <ForgotPasswordPage /> },
+      { path: 'reset-password', element: <ResetPasswordPage /> },
+    ],
+  },
+
+  // Legacy & Alias /auth/* routes for seamless Phase 0/1 backward compatibility
   {
     path: '/auth',
     element: <AuthLayout />,
     children: [
       { path: 'login', element: <LoginPage /> },
       { path: 'register', element: <RegisterPage /> },
+      { path: 'register/student', element: <StudentRegisterPage /> },
+      { path: 'register/recruiter', element: <RecruiterRegisterPage /> },
+      { path: 'register/tpo', element: <TpoRegisterPage /> },
       { path: 'forgot-password', element: <ForgotPasswordPage /> },
+      { path: 'reset-password', element: <ResetPasswordPage /> },
     ],
   },
 
@@ -174,4 +199,3 @@ export const router = createBrowserRouter([
     ),
   },
 ]);
-

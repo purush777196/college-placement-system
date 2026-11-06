@@ -1,93 +1,207 @@
 import { create } from 'zustand';
 import { ROLES } from '../constants/roles';
+import { DEMO_USERS, authMockService } from '../services/mock/auth.mock';
 
-// Pre-configured mock demo profiles for instant role testing
-export const DEMO_PROFILES = {
-  [ROLES.STUDENT]: {
-    id: 'std_01',
-    name: 'Aarav Sharma',
-    email: 'aarav.sharma@campus.edu',
-    role: ROLES.STUDENT,
-    avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150',
-    department: 'Computer Science & Engineering',
-    batch: '2022 - 2026',
-    cgpa: 8.85,
-    placementStatus: 'Eligible & Shortlisted',
-  },
-  [ROLES.TPO]: {
-    id: 'tpo_01',
-    name: 'Dr. Ramesh Kulkarni',
-    email: 'tpo.head@campus.edu',
-    role: ROLES.TPO,
-    avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150',
-    title: 'Head of Training & Placements',
-    college: 'CampusConnect Institute of Technology',
-  },
-  [ROLES.RECRUITER]: {
-    id: 'rec_01',
-    name: 'Priya Sundaram',
-    email: 'priya.s@novatech.io',
-    role: ROLES.RECRUITER,
-    avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150',
-    company: 'NovaTech Global Inc.',
-    designation: 'Lead University Talent Partner',
-  },
-  [ROLES.ADMIN]: {
-    id: 'adm_01',
-    name: 'System Admin',
-    email: 'admin@campusconnect.internal',
-    role: ROLES.ADMIN,
-    avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150',
-    accessLevel: 'Super Administrator',
-  },
+// Compatibility export
+export const DEMO_PROFILES = DEMO_USERS;
+
+const SESSION_STORAGE_KEY = 'campusconnect_demo_session';
+
+/**
+ * Safe helper to read session without exposing sensitive data
+ */
+const getInitialSession = () => {
+  if (typeof window === 'undefined') {
+    return { user: DEMO_USERS[ROLES.STUDENT], isAuthenticated: true, currentRole: ROLES.STUDENT };
+  }
+  try {
+    const stored =
+      localStorage.getItem(SESSION_STORAGE_KEY) ||
+      sessionStorage.getItem(SESSION_STORAGE_KEY);
+    if (stored) {
+      const parsed = JSON.parse(stored);
+      if (parsed && parsed.role) {
+        return {
+          user: parsed,
+          isAuthenticated: true,
+          currentRole: parsed.role,
+        };
+      }
+    }
+  } catch {
+    // Fallback if storage access fails
+  }
+  return {
+    user: DEMO_USERS[ROLES.STUDENT],
+    isAuthenticated: true,
+    currentRole: ROLES.STUDENT,
+  };
 };
 
-export const useAuthStore = create((set) => ({
-  user: DEMO_PROFILES[ROLES.STUDENT],
-  isAuthenticated: true,
-  currentRole: ROLES.STUDENT,
-  isLoading: false,
+const initialSession = getInitialSession();
 
-  // Demo login function (strictly mock demonstration, zero credentials stored)
+export const useAuthStore = create((set, get) => ({
+  user: initialSession.user,
+  isAuthenticated: initialSession.isAuthenticated,
+  currentRole: initialSession.currentRole,
+  isLoading: false,
+  authError: null,
+
+  /**
+   * Safe login action integrating with mock auth service
+   */
+  login: async ({ email, password, role, rememberMe = false }) => {
+    set({ isLoading: true, authError: null });
+    try {
+      const response = await authMockService.login({ email, password, role });
+      const authenticatedUser = response.user;
+
+      // Safe non-sensitive profile storage (NO passwords, NO fake JWTs)
+      const safeProfile = {
+        id: authenticatedUser.id,
+        name: authenticatedUser.name,
+        email: authenticatedUser.email,
+        role: authenticatedUser.role,
+        avatar: authenticatedUser.avatar,
+        department: authenticatedUser.department,
+        companyName: authenticatedUser.companyName,
+        collegeName: authenticatedUser.collegeName,
+        placementStatus: authenticatedUser.placementStatus,
+      };
+
+      if (typeof window !== 'undefined') {
+        const storage = rememberMe ? localStorage : sessionStorage;
+        storage.setItem(SESSION_STORAGE_KEY, JSON.stringify(safeProfile));
+      }
+
+      set({
+        user: authenticatedUser,
+        isAuthenticated: true,
+        currentRole: authenticatedUser.role,
+        isLoading: false,
+        authError: null,
+      });
+
+      return { success: true, user: authenticatedUser };
+    } catch (err) {
+      const errorMsg = err.message || 'Authentication failed. Please verify credentials.';
+      set({ isLoading: false, authError: errorMsg });
+      throw err;
+    }
+  },
+
+  /**
+   * Handle successful registration state
+   */
+  handleRegistrationSuccess: (registeredUser) => {
+    if (!registeredUser) return;
+    set({
+      user: registeredUser,
+      isAuthenticated: true,
+      currentRole: registeredUser.role,
+    });
+  },
+
+  /**
+   * Instant demo role switcher (convenience helper for testing)
+   */
   loginAsRole: (role) => {
-    const profile = DEMO_PROFILES[role] || DEMO_PROFILES[ROLES.STUDENT];
+    const profile = DEMO_USERS[role] || DEMO_USERS[ROLES.STUDENT];
+    if (typeof window !== 'undefined') {
+      sessionStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(profile));
+    }
     set({
       user: profile,
       isAuthenticated: true,
       currentRole: role,
+      authError: null,
     });
   },
 
-  // Custom demo login with simulated profile
+  /**
+   * Custom demo login with simulated profile
+   */
   demoLogin: ({ email, role = ROLES.STUDENT }) => {
-    const base = DEMO_PROFILES[role] || DEMO_PROFILES[ROLES.STUDENT];
+    const base = DEMO_USERS[role] || DEMO_USERS[ROLES.STUDENT];
+    const profile = {
+      ...base,
+      email: email || base.email,
+    };
+    if (typeof window !== 'undefined') {
+      sessionStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(profile));
+    }
     set({
-      user: {
-        ...base,
-        email: email || base.email,
-      },
+      user: profile,
       isAuthenticated: true,
       currentRole: role,
+      authError: null,
     });
   },
 
-  // Switch active demonstration role
+  /**
+   * Switch active demonstration role
+   */
   switchRole: (role) => {
-    if (DEMO_PROFILES[role]) {
+    if (DEMO_USERS[role]) {
+      const profile = DEMO_USERS[role];
+      if (typeof window !== 'undefined') {
+        sessionStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(profile));
+      }
       set({
-        user: DEMO_PROFILES[role],
+        user: profile,
         currentRole: role,
       });
     }
   },
 
-  // Demo logout
+  /**
+   * Retrieve current user profile asynchronously
+   */
+  getCurrentUser: async () => {
+    const role = get().currentRole || ROLES.STUDENT;
+    set({ isLoading: true });
+    try {
+      const user = await authMockService.getCurrentUser(role);
+      set({ user, isLoading: false });
+      return user;
+    } catch {
+      set({ isLoading: false });
+      return null;
+    }
+  },
+
+  /**
+   * Initialize or restore demo session from storage
+   */
+  initializeSession: () => {
+    const session = getInitialSession();
+    set(session);
+  },
+
+  /**
+   * Clear error state
+   */
+  clearAuthError: () => {
+    set({ authError: null });
+  },
+
+  /**
+   * Demo logout action
+   */
   logout: () => {
+    if (typeof window !== 'undefined') {
+      try {
+        localStorage.removeItem(SESSION_STORAGE_KEY);
+        sessionStorage.removeItem(SESSION_STORAGE_KEY);
+      } catch {
+        // ignore
+      }
+    }
     set({
       user: null,
       isAuthenticated: false,
       currentRole: null,
+      authError: null,
     });
   },
 }));
-
