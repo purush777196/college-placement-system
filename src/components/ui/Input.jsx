@@ -2,9 +2,34 @@ import React from 'react';
 import { cn } from '../../utils/cn';
 
 export const Input = React.forwardRef(
-  ({ className, type = 'text', error, leftIcon, rightIcon, helperText, ...props }, ref) => {
+  (
+    {
+      className,
+      type = 'text',
+      error,
+      label,
+      required,
+      leftIcon,
+      rightIcon,
+      helperText,
+      id,
+      ...props
+    },
+    ref
+  ) => {
+    const inputId =
+      id || (label ? `input-${label.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]/g, '')}` : undefined);
+
     return (
       <div className="w-full">
+        {label && (
+          <label
+            htmlFor={inputId}
+            className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1"
+          >
+            {label} {required && <span className="text-rose-500">*</span>}
+          </label>
+        )}
         <div className="relative flex items-center">
           {leftIcon && (
             <div className="absolute left-3 flex items-center pointer-events-none text-slate-400 dark:text-slate-500">
@@ -12,6 +37,7 @@ export const Input = React.forwardRef(
             </div>
           )}
           <input
+            id={inputId}
             type={type}
             ref={ref}
             className={cn(

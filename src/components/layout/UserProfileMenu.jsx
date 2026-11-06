@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { LogOut, ChevronDown, Check, SwitchCamera } from 'lucide-react';
+import { LogOut, ChevronDown, Check, SwitchCamera, User } from 'lucide-react';
 import Dropdown from '../ui/Dropdown';
 import { Badge } from '../ui/Badge';
 import { useAuth } from '../../hooks/useAuth';
@@ -55,6 +55,16 @@ export const UserProfileMenu = () => {
       disabled: true,
     },
     { separator: true },
+    ...(currentRole === ROLES.STUDENT
+      ? [
+          {
+            label: 'My Placement Profile',
+            icon: <User className="h-4 w-4 text-indigo-600" />,
+            onClick: () => navigate('/student/profile'),
+          },
+          { separator: true },
+        ]
+      : []),
     {
       label: 'Demo: Switch to Student',
       icon: <SwitchCamera className="h-4 w-4 text-blue-600" />,

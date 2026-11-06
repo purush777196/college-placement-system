@@ -31,6 +31,7 @@ export const Button = React.forwardRef(
       variant = 'primary',
       size = 'md',
       isLoading = false,
+      loading = false,
       disabled = false,
       children,
       type = 'button',
@@ -40,11 +41,12 @@ export const Button = React.forwardRef(
     },
     ref
   ) => {
+    const isBusy = isLoading || loading;
     return (
       <button
         ref={ref}
         type={type}
-        disabled={disabled || isLoading}
+        disabled={disabled || isBusy}
         className={cn(
           'inline-flex items-center justify-center font-medium transition-colors select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 cursor-pointer',
           buttonVariants[variant] || buttonVariants.primary,
@@ -53,10 +55,10 @@ export const Button = React.forwardRef(
         )}
         {...props}
       >
-        {isLoading && <Loader2 className="h-4 w-4 animate-spin" />}
-        {!isLoading && leftIcon && <span className="inline-flex shrink-0">{leftIcon}</span>}
+        {isBusy && <Loader2 className="h-4 w-4 animate-spin" />}
+        {!isBusy && leftIcon && <span className="inline-flex shrink-0">{leftIcon}</span>}
         {children}
-        {!isLoading && rightIcon && <span className="inline-flex shrink-0">{rightIcon}</span>}
+        {!isBusy && rightIcon && <span className="inline-flex shrink-0">{rightIcon}</span>}
       </button>
     );
   }
