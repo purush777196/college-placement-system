@@ -85,4 +85,32 @@ test.describe('CampusConnect Smoke & E2E Tests (Phases 1 & 2)', () => {
     await page.click('button:has-text("Send Recovery Instructions")');
     await expect(page.locator('text=Password recovery instructions simulated!')).toBeVisible();
   });
+
+  test('should log in as student and explore placement drives, applications, and interviews', async ({ page }) => {
+    await page.goto('/login');
+    await page.click('button:has-text("Student")');
+    await page.click('button[type="submit"]:has-text("Sign In as Student")');
+    await expect(page).toHaveURL(/\/student\/dashboard/);
+
+    // Verify dashboard metrics & elements
+    await expect(page.locator('h1:has-text("Welcome back")')).toBeVisible();
+    await expect(page.locator('text=Application Pipeline')).toBeVisible();
+
+    // Navigate to drives discovery
+    await page.goto('/student/drives');
+    await expect(page.locator('h1:has-text("Placement Drive Discovery")')).toBeVisible();
+    await expect(page.locator('text=Google Cloud India')).toBeVisible();
+
+    // Navigate to applications page
+    await page.goto('/student/applications');
+    await expect(page.locator('h1:has-text("My Placement Applications")')).toBeVisible();
+
+    // Navigate to interviews page
+    await page.goto('/student/interviews');
+    await expect(page.locator('h1:has-text("Upcoming Interviews")')).toBeVisible();
+
+    // Navigate to notifications page
+    await page.goto('/student/notifications');
+    await expect(page.locator('h1:has-text("Notification Center")')).toBeVisible();
+  });
 });
