@@ -1,172 +1,161 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { User, Mail, Lock, ArrowRight, CheckCircle2 } from 'lucide-react';
-import { registerSchema } from '../../schemas/authSchemas';
-import { authMockService } from '../../services/mock/auth.mock';
-import { useAuth } from '../../hooks/useAuth';
-import Button from '../../components/ui/Button';
-import Input from '../../components/ui/Input';
-import Select from '../../components/ui/Select';
+import React from 'react';
+import { Link } from 'react-router-dom';
+import {
+  GraduationCap,
+  Building2,
+  TrendingUp,
+  ArrowRight,
+  CheckCircle2,
+  ShieldAlert,
+} from 'lucide-react';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '../../components/ui/Card';
+import { Badge } from '../../components/ui/Badge';
+import Button from '../../components/ui/Button';
 
 export const RegisterPage = () => {
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [successMessage, setSuccessMessage] = useState(null);
-  const { loginAsRole } = useAuth();
-  const navigate = useNavigate();
-
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm({
-    resolver: zodResolver(registerSchema),
-    defaultValues: {
-      fullName: '',
-      email: '',
-      role: 'student',
-      password: '',
-      confirmPassword: '',
-      termsAccepted: false,
+  const roles = [
+    {
+      id: 'student',
+      title: 'Student Candidate',
+      badge: 'Candidate Portal',
+      badgeVariant: 'primary',
+      icon: <GraduationCap className="h-6 w-6 text-blue-600 dark:text-blue-400" />,
+      borderHover: 'hover:border-blue-500 hover:ring-1 hover:ring-blue-500',
+      description:
+        'For students seeking internship and full-time campus placement opportunities across verified partner companies.',
+      benefits: [
+        'Automated eligibility checking across active drives',
+        '1-Click applications with live status tracking',
+        'AI resume insights and pre-verified profile',
+        'Direct interview schedules & offer notices',
+      ],
+      route: '/register/student',
+      ctaText: 'Register as Student',
     },
-  });
-
-  const onSubmit = async (data) => {
-    try {
-      setIsSubmitting(true);
-      const res = await authMockService.register(data);
-      setSuccessMessage(res.message);
-      loginAsRole(data.role);
-      setTimeout(() => {
-        navigate(`/${data.role}/dashboard`);
-      }, 1000);
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
+    {
+      id: 'recruiter',
+      title: 'Corporate Recruiter',
+      badge: 'Employer Portal',
+      badgeVariant: 'warning',
+      icon: <Building2 className="h-6 w-6 text-amber-600 dark:text-amber-400" />,
+      borderHover: 'hover:border-amber-500 hover:ring-1 hover:ring-amber-500',
+      description:
+        'For enterprise talent partners, campus hiring leads, and technical recruitment teams.',
+      benefits: [
+        'Access to pre-screened, verified campus talent',
+        'Publish multi-tier placement & internship drives',
+        'Coordinate online assessments & interview rounds',
+        'Issue digital offers with automated pipeline tracking',
+      ],
+      route: '/register/recruiter',
+      ctaText: 'Register as Recruiter',
+    },
+    {
+      id: 'tpo',
+      title: 'Placement Officer (TPO)',
+      badge: 'Institutional Governance',
+      badgeVariant: 'success',
+      icon: <TrendingUp className="h-6 w-6 text-emerald-600 dark:text-emerald-400" />,
+      borderHover: 'hover:border-emerald-500 hover:ring-1 hover:ring-emerald-500',
+      description:
+        'For university placement heads, faculty coordinators, and college placement administration.',
+      benefits: [
+        'Centralized drive scheduling and branch eligibility cutoffs',
+        'Automated multi-department candidate verification',
+        'Live placement conversion rates & package metrics',
+        'One-click NIRF and NBA accreditation data export',
+      ],
+      route: '/register/tpo',
+      ctaText: 'Register as Placement Officer',
+    },
+  ];
 
   return (
-    <Card className="shadow-lg border-slate-200 dark:border-slate-800">
-      <CardHeader className="space-y-1">
-        <CardTitle className="text-2xl font-bold">Create Account</CardTitle>
-        <CardDescription>
-          Register to access placement drives, manage campus talent, or post openings
-        </CardDescription>
-      </CardHeader>
+    <div className="w-full max-w-4xl mx-auto space-y-6 py-4">
+      <div className="text-center space-y-2">
+        <h1 className="text-3xl font-extrabold tracking-tight text-slate-900 dark:text-slate-100">
+          Create Your CampusConnect Account
+        </h1>
+        <p className="text-sm text-slate-600 dark:text-slate-400 max-w-lg mx-auto">
+          Select your institutional role to access the dedicated onboarding workflow and features.
+        </p>
+      </div>
 
-      <CardContent className="space-y-4">
-        {successMessage && (
-          <div className="flex items-center gap-2 rounded-lg bg-emerald-50 p-3 text-xs text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-300 border border-emerald-200 dark:border-emerald-800">
-            <CheckCircle2 className="h-4 w-4 shrink-0" />
-            <span>{successMessage} Redirecting to your dashboard...</span>
-          </div>
-        )}
-
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-          <div className="space-y-1">
-            <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
-              Full Name
-            </label>
-            <Input
-              placeholder="e.g. Aarav Sharma"
-              leftIcon={<User className="h-4 w-4" />}
-              error={errors.fullName?.message}
-              {...register('fullName')}
-            />
-          </div>
-
-          <div className="space-y-1">
-            <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
-              Institutional Email
-            </label>
-            <Input
-              type="email"
-              placeholder="name@college.edu"
-              leftIcon={<Mail className="h-4 w-4" />}
-              error={errors.email?.message}
-              {...register('email')}
-            />
-          </div>
-
-          <div className="space-y-1">
-            <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
-              Account Role
-            </label>
-            <Select
-              options={[
-                { value: 'student', label: 'Student (Candidate)' },
-                { value: 'tpo', label: 'Placement Officer (TPO)' },
-                { value: 'recruiter', label: 'Corporate Recruiter' },
-                { value: 'admin', label: 'System Administrator' },
-              ]}
-              error={errors.role?.message}
-              {...register('role')}
-            />
-          </div>
-
-          <div className="space-y-1">
-            <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
-              Password
-            </label>
-            <Input
-              type="password"
-              placeholder="At least 8 chars, 1 uppercase & 1 number"
-              leftIcon={<Lock className="h-4 w-4" />}
-              error={errors.password?.message}
-              {...register('password')}
-            />
-          </div>
-
-          <div className="space-y-1">
-            <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
-              Confirm Password
-            </label>
-            <Input
-              type="password"
-              placeholder="Re-enter password"
-              leftIcon={<Lock className="h-4 w-4" />}
-              error={errors.confirmPassword?.message}
-              {...register('confirmPassword')}
-            />
-          </div>
-
-          <div className="flex items-center gap-2">
-            <input
-              type="checkbox"
-              id="terms"
-              className="h-4 w-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500 cursor-pointer"
-              {...register('termsAccepted')}
-            />
-            <label htmlFor="terms" className="text-xs text-slate-500 cursor-pointer">
-              I accept the placement cell terms and honor code
-            </label>
-          </div>
-          {errors.termsAccepted && (
-            <p className="text-xs text-rose-600 font-medium">{errors.termsAccepted.message}</p>
-          )}
-
-          <Button
-            type="submit"
-            className="w-full"
-            isLoading={isSubmitting}
-            rightIcon={<ArrowRight className="h-4 w-4" />}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {roles.map((role) => (
+          <Card
+            key={role.id}
+            className={`flex flex-col justify-between transition-all duration-200 border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-md ${role.borderHover}`}
           >
-            Complete Registration
-          </Button>
-        </form>
-      </CardContent>
+            <CardHeader className="space-y-3 pb-4">
+              <div className="flex items-center justify-between">
+                <div className="p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800">
+                  {role.icon}
+                </div>
+                <Badge variant={role.badgeVariant} className="text-[10px]">
+                  {role.badge}
+                </Badge>
+              </div>
+              <div>
+                <CardTitle className="text-lg font-bold">{role.title}</CardTitle>
+                <CardDescription className="text-xs mt-1 leading-relaxed">
+                  {role.description}
+                </CardDescription>
+              </div>
+            </CardHeader>
 
-      <CardFooter className="border-t border-slate-100 dark:border-slate-800 text-center text-xs text-slate-500 justify-center">
-        Already registered?{' '}
-        <Link to="/auth/login" className="font-semibold text-blue-600 hover:underline dark:text-blue-400 ml-1">
-          Sign In
+            <CardContent className="space-y-3 text-xs pt-0 flex-1">
+              <p className="font-semibold text-slate-700 dark:text-slate-300">Included Benefits:</p>
+              <ul className="space-y-2 text-slate-600 dark:text-slate-400">
+                {role.benefits.map((benefit, idx) => (
+                  <li key={idx} className="flex items-start gap-2">
+                    <CheckCircle2 className="h-3.5 w-3.5 text-emerald-500 shrink-0 mt-0.5" />
+                    <span>{benefit}</span>
+                  </li>
+                ))}
+              </ul>
+            </CardContent>
+
+            <CardFooter className="pt-4 border-t border-slate-100 dark:border-slate-800">
+              <Link to={role.route} className="w-full">
+                <Button
+                  className="w-full"
+                  variant={role.id === 'student' ? 'primary' : 'outline'}
+                  rightIcon={<ArrowRight className="h-4 w-4" />}
+                >
+                  {role.ctaText}
+                </Button>
+              </Link>
+            </CardFooter>
+          </Card>
+        ))}
+      </div>
+
+      {/* Administrator Policy Disclaimer */}
+      <div className="rounded-xl bg-amber-50 dark:bg-amber-950/30 p-4 border border-amber-200 dark:border-amber-900/40 text-xs text-amber-800 dark:text-amber-300 flex items-start gap-3">
+        <ShieldAlert className="h-5 w-5 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
+        <div className="space-y-1">
+          <p className="font-semibold">Notice Regarding Administrator Access</p>
+          <p className="text-[11px] leading-relaxed">
+            System Administrator accounts cannot be registered publicly. Administrator privileges are
+            strictly provisioned through institutional governance. To review admin capabilities,
+            please sign in using the{' '}
+            <Link to="/login" className="font-semibold underline hover:text-amber-900 dark:hover:text-amber-100">
+              Demo Administrator account
+            </Link>
+            .
+          </p>
+        </div>
+      </div>
+
+      <div className="text-center text-xs text-slate-500">
+        Already have an account?{' '}
+        <Link to="/login" className="font-semibold text-blue-600 hover:underline dark:text-blue-400">
+          Sign in here
         </Link>
-      </CardFooter>
-    </Card>
+      </div>
+    </div>
   );
 };
 
 export default RegisterPage;
-
