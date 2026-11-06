@@ -25,6 +25,11 @@ import ForgotPasswordPage from '../pages/auth/ForgotPasswordPage';
 import ResetPasswordPage from '../pages/auth/ResetPasswordPage';
 
 import StudentDashboard from '../pages/student/StudentDashboard';
+import StudentDrivesPage from '../pages/student/StudentDrivesPage';
+import StudentDriveDetailPage from '../pages/student/StudentDriveDetailPage';
+import StudentApplicationsPage from '../pages/student/StudentApplicationsPage';
+import StudentInterviewsPage from '../pages/student/StudentInterviewsPage';
+import StudentNotificationsPage from '../pages/student/StudentNotificationsPage';
 import TpoDashboard from '../pages/tpo/TpoDashboard';
 import RecruiterDashboard from '../pages/recruiter/RecruiterDashboard';
 import AdminDashboard from '../pages/admin/AdminDashboard';
@@ -112,14 +117,16 @@ export const router = createBrowserRouter([
       </ProtectedRoute>
     ),
     children: [
+      { index: true, element: <Navigate to="/student/dashboard" replace /> },
       { path: 'dashboard', element: <StudentDashboard /> },
-      { path: 'drives', element: <StudentDashboard /> },
-      { path: 'applications', element: <StudentDashboard /> },
+      { path: 'drives', element: <StudentDrivesPage /> },
+      { path: 'drives/:driveId', element: <StudentDriveDetailPage /> },
+      { path: 'applications', element: <StudentApplicationsPage /> },
       { path: 'resume-builder', element: <StudentDashboard /> },
       { path: 'assessments', element: <StudentDashboard /> },
-      { path: 'interviews', element: <StudentDashboard /> },
-      { path: 'offers', element: <StudentDashboard /> },
-      { path: 'notifications', element: <StudentDashboard /> },
+      { path: 'interviews', element: <StudentInterviewsPage /> },
+      { path: 'offers', element: <StudentApplicationsPage /> },
+      { path: 'notifications', element: <StudentNotificationsPage /> },
     ],
   },
 
