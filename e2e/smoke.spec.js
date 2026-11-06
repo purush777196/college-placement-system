@@ -1,6 +1,6 @@
 import { test, expect } from '@playwright/test';
 
-test.describe('CampusConnect Phase 1 Smoke & E2E Tests', () => {
+test.describe('CampusConnect Smoke & E2E Tests (Phases 1 & 2)', () => {
   test('should load public landing page with brand and hero headline', async ({ page }) => {
     await page.goto('/');
     await expect(page).toHaveTitle(/CampusConnect/);
@@ -53,11 +53,36 @@ test.describe('CampusConnect Phase 1 Smoke & E2E Tests', () => {
     await expect(page.locator('text=Message Received (Demo Mode)')).toBeVisible({ timeout: 5000 });
   });
 
-  test('should navigate to login portal and switch roles', async ({ page }) => {
-    await page.goto('/auth/login');
+  test('should load login page, autofill demo persona, and authenticate to student dashboard', async ({ page }) => {
+    await page.goto('/login');
     await expect(page.locator('h3:has-text("Sign In")')).toBeVisible();
     await page.click('button:has-text("Student")');
     await page.click('button[type="submit"]:has-text("Sign In as Student")');
     await expect(page).toHaveURL(/\/student\/dashboard/);
+  });
+
+  test('should navigate to registration role selection page and display 3 personas', async ({ page }) => {
+    await page.goto('/register');
+    await expect(page.locator('h1:has-text("Create Your CampusConnect Account")')).toBeVisible();
+    await expect(page.locator('text=Student Candidate')).toBeVisible();
+    await expect(page.locator('text=Corporate Recruiter')).toBeVisible();
+    await expect(page.locator('text=Placement Officer (TPO)')).toBeVisible();
+    await expect(page.locator('text=System Administrator accounts cannot be registered publicly')).toBeVisible();
+  });
+
+  test('should open student registration and support demo autofill', async ({ page }) => {
+    await page.goto('/register/student');
+    await expect(page.locator('h3:has-text("Student Registration")')).toBeVisible();
+    await page.click('button:has-text("Autofill Demo Student")');
+    await expect(page.locator('#student-name')).toHaveValue('Rohan Gupta');
+    await expect(page.locator('#student-cgpa')).toHaveValue('8.75');
+  });
+
+  test('should simulate password reset workflow', async ({ page }) => {
+    await page.goto('/forgot-password');
+    await expect(page.locator('h3:has-text("Recover Password")')).toBeVisible();
+    await page.click('button:has-text("Use Demo Email")');
+    await page.click('button:has-text("Send Recovery Instructions")');
+    await expect(page.locator('text=Password recovery instructions simulated!')).toBeVisible();
   });
 });
