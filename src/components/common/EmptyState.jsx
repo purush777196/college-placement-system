@@ -1,5 +1,6 @@
 import React from 'react';
 import { Inbox } from 'lucide-react';
+import Button from '../ui/Button';
 import { cn } from '../../utils/cn';
 
 export const EmptyState = ({
@@ -7,6 +8,8 @@ export const EmptyState = ({
   title = 'No records available',
   description = 'There are no items matching your criteria at this moment.',
   action,
+  actionLabel,
+  onAction,
   className,
 }) => {
   return (
@@ -25,7 +28,15 @@ export const EmptyState = ({
       <p className="mt-1 text-sm text-slate-500 dark:text-slate-400 max-w-sm">
         {description}
       </p>
-      {action && <div className="mt-5">{action}</div>}
+      {(action || (actionLabel && onAction)) && (
+        <div className="mt-5">
+          {action || (
+            <Button variant="outline" size="sm" onClick={onAction}>
+              {actionLabel}
+            </Button>
+          )}
+        </div>
+      )}
     </div>
   );
 };
