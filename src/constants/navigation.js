@@ -12,7 +12,8 @@ import {
   TrendingUp,
   Bell,
   Sparkles,
-  ClipboardList
+  ClipboardList,
+  User,
 } from 'lucide-react';
 import { ROLES } from './roles';
 
@@ -29,6 +30,7 @@ export const PUBLIC_NAV_ITEMS = [
 export const ROLE_NAVIGATION = {
   [ROLES.STUDENT]: [
     { label: 'Dashboard', href: '/student/dashboard', icon: LayoutDashboard },
+    { label: 'My Profile', href: '/student/profile', icon: User },
     { label: 'Placement Drives', href: '/student/drives', icon: Briefcase, badge: 'Active' },
     { label: 'My Applications', href: '/student/applications', icon: ClipboardList },
     { label: 'AI Resume Builder', href: '/student/resume-builder', icon: Sparkles, badge: 'AI' },

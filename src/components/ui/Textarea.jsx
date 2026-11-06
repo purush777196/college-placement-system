@@ -2,10 +2,22 @@ import React from 'react';
 import { cn } from '../../utils/cn';
 
 export const Textarea = React.forwardRef(
-  ({ className, error, helperText, rows = 4, ...props }, ref) => {
+  ({ className, error, helperText, label, required, id, rows = 4, ...props }, ref) => {
+    const textareaId =
+      id || (label ? `textarea-${label.toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]/g, '')}` : undefined);
+
     return (
       <div className="w-full">
+        {label && (
+          <label
+            htmlFor={textareaId}
+            className="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1"
+          >
+            {label} {required && <span className="text-rose-500">*</span>}
+          </label>
+        )}
         <textarea
+          id={textareaId}
           ref={ref}
           rows={rows}
           className={cn(

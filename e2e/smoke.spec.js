@@ -113,4 +113,23 @@ test.describe('CampusConnect Smoke & E2E Tests (Phases 1 & 2)', () => {
     await page.goto('/student/notifications');
     await expect(page.locator('h1:has-text("Notification Center")')).toBeVisible();
   });
+
+  test('should log in as student and manage placement profile, academic records, and recruiter preview', async ({ page }) => {
+    await page.goto('/login');
+    await page.click('button:has-text("Student")');
+    await page.click('button[type="submit"]:has-text("Sign In as Student")');
+    await expect(page).toHaveURL(/\/student\/dashboard/);
+
+    // Navigate to profile page
+    await page.goto('/student/profile');
+    await expect(page.locator('text=Placement Profile & Academic Records')).toBeVisible();
+    await expect(page.locator('text=Aarav Sharma').first()).toBeVisible();
+    await expect(page.locator('text=Profile Completeness')).toBeVisible();
+
+    // Open Recruiter Preview Modal
+    await page.click('button:has-text("Recruiter Preview")');
+    await expect(page.locator('text=Corporate Recruiter Profile Preview')).toBeVisible();
+    await expect(page.locator('text=Recruiter View Simulation:')).toBeVisible();
+    await page.click('button:has-text("Close Preview")');
+  });
 });

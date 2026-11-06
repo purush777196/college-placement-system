@@ -88,22 +88,33 @@ export const StudentProfileSummaryCard = ({
         <div className="space-y-1.5 pt-2 border-t border-slate-100 dark:border-slate-800">
           <span className="text-[10px] font-semibold uppercase text-slate-400">Verified Technical Skills</span>
           <div className="flex flex-wrap gap-1.5 pt-1">
-            {(student.skills || []).map((skill) => (
-              <span
-                key={skill}
-                className="rounded-md bg-slate-100 dark:bg-slate-800 px-2 py-0.5 text-[11px] font-medium text-slate-700 dark:text-slate-300"
-              >
-                {skill}
-              </span>
-            ))}
+            {(student.skills || []).map((skill, idx) => {
+              const label = typeof skill === 'string' ? skill : skill.name;
+              const key = typeof skill === 'string' ? `${skill}-${idx}` : skill.id || `${skill.name}-${idx}`;
+              return (
+                <span
+                  key={key}
+                  className="rounded-md bg-slate-100 dark:bg-slate-800 px-2 py-0.5 text-[11px] font-medium text-slate-700 dark:text-slate-300"
+                >
+                  {label}
+                </span>
+              );
+            })}
           </div>
         </div>
       </CardContent>
 
-      <CardFooter className="pt-3 border-t border-slate-100 dark:border-slate-800 text-xs">
+      <CardFooter className="pt-3 border-t border-slate-100 dark:border-slate-800 text-xs flex flex-col gap-2">
+        <Link
+          to="/student/profile"
+          className="w-full flex items-center justify-between text-indigo-600 dark:text-indigo-400 font-semibold hover:underline"
+        >
+          <span>Manage Placement Profile</span>
+          <ArrowRight className="h-3.5 w-3.5" />
+        </Link>
         <Link
           to="/student/resume-builder"
-          className="w-full flex items-center justify-between text-blue-600 dark:text-blue-400 font-semibold hover:underline"
+          className="w-full flex items-center justify-between text-slate-600 dark:text-slate-400 font-medium hover:underline text-[11px]"
         >
           <span>Open AI Resume ATS Builder</span>
           <ArrowRight className="h-3.5 w-3.5" />

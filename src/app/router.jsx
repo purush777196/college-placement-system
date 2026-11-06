@@ -25,6 +25,7 @@ import ForgotPasswordPage from '../pages/auth/ForgotPasswordPage';
 import ResetPasswordPage from '../pages/auth/ResetPasswordPage';
 
 import StudentDashboard from '../pages/student/StudentDashboard';
+import StudentProfilePage from '../pages/student/StudentProfilePage';
 import StudentDrivesPage from '../pages/student/StudentDrivesPage';
 import StudentDriveDetailPage from '../pages/student/StudentDriveDetailPage';
 import StudentApplicationsPage from '../pages/student/StudentApplicationsPage';
@@ -119,6 +120,7 @@ export const router = createBrowserRouter([
     children: [
       { index: true, element: <Navigate to="/student/dashboard" replace /> },
       { path: 'dashboard', element: <StudentDashboard /> },
+      { path: 'profile', element: <StudentProfilePage /> },
       { path: 'drives', element: <StudentDrivesPage /> },
       { path: 'drives/:driveId', element: <StudentDriveDetailPage /> },
       { path: 'applications', element: <StudentApplicationsPage /> },
